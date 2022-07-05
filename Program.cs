@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -203,11 +203,16 @@ namespace DiscordSniper
                     httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(pair.Key);
                     using (HttpRequestMessage message = new HttpRequestMessage(new HttpMethod("PATCH"), "https://discord.com/api/v9/users/@me"))
                     {
-                        message.Content = new StringContent("{\"username\":\"" + discordInfo.CurrentUsername + "\",\"password\":\"" + pair.Value + "\",\"discriminator\":\"" + discordInfo.CurrentDiscriminator + "\"}");
-                        using (HttpResponseMessage httpResponseMessage = httpClient.SendAsync(message).Result)
+                        using (StringContent stringContent = new StringContent("{\"username\":\"" + discordInfo.CurrentUsername + "\",\"password\":\"" + pair.Value + "\",\"discriminator\":\"" + discordInfo.CurrentDiscriminator + "\"}"))
                         {
-                            return httpResponseMessage.IsSuccessStatusCode;
-                        }
+                            stringContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                            message.Content = stringContent;
+
+                            using (HttpResponseMessage httpResponseMessage = httpClient.SendAsync(message).Result)
+                            {
+                                return httpResponseMessage.IsSuccessStatusCode;
+                            }
+                        } 
                     }
                 }
             }
