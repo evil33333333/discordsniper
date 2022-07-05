@@ -1,0 +1,2 @@
+http_proxy_goes_here
+if you dont want proxies, just delete/move this file or something idk
